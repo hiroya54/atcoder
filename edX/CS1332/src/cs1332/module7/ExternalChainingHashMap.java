@@ -1,5 +1,6 @@
 package cs1332.module7;
 
+import java.util.NoSuchElementException;
 import java.util.Objects;
 
 /**
@@ -76,13 +77,27 @@ public class ExternalChainingHashMap<K, V> {
     	if(Objects.equals(key, null) || Objects.equals(value, null)) {
     		throw new IllegalArgumentException();
     	}else {
-    		double load = (double)size/table.length;
-    		if(load>MAX_LOAD_FACTOR) {
+    		if((size+1.0)/table.length>MAX_LOAD_FACTOR) {
     			resizeBackingTable(2*table.length+1);
     		}
+			int hash = Math.abs(key.hashCode()%table.length);
+			ExternalChainingMapEntry<K, V> tmp = table[hash];
+			while(tmp!=null) {
+				if(tmp.getKey().equals(key)) {
+					V res = tmp.getValue();
+					tmp.setValue(value);
+					return res;
+				}
+				tmp=tmp.getNext();
+			}
+			tmp=table[hash];
+			ExternalChainingMapEntry<K, V> newEntry = new ExternalChainingMapEntry<>(key, value);
+			newEntry.setNext(tmp);
+			table[hash]=newEntry;
+			size++;
+			return null;
     	}
     }
-
     /**
      * Removes the entry with a matching key from the map.
      *
@@ -93,6 +108,37 @@ public class ExternalChainingHashMap<K, V> {
      */
     public V remove(K key) {
         // WRITE YOUR CODE HERE (DO NOT MODIFY METHOD HEADER)!
+    	
+    	if(key==null) {
+    		throw new IllegalArgumentException();
+    	}else {
+    		int hash = Math.abs(key.hashCode()%table.length);
+    		if(table[hash]!=null) {
+				ExternalChainingMapEntry<K, V> bef = null;
+				ExternalChainingMapEntry<K, V> curr = table[hash];
+    			if(curr.getKey().equals(key)) {
+        			V res = curr.getValue();
+        			table[hash]=curr.getNext();
+        			size--;
+        			return res;
+    			}else{
+    				bef = curr;
+					curr = curr.getNext();
+    				while(curr!=null) {
+    					if(curr.getKey().equals(key)){
+    						V res = curr.getValue();
+    						bef.setNext(curr.getNext());
+    						size--;
+    						return res;
+    					}
+    					bef = curr;
+    					curr = curr.getNext();
+    				}
+    			}
+    		}
+
+    	}
+    	throw new NoSuchElementException();
     }
 
     /**
@@ -115,21 +161,19 @@ public class ExternalChainingHashMap<K, V> {
     private void resizeBackingTable(int length) {
         // WRITE YOUR CODE HERE (DO NOT MODIFY METHOD HEADER)!
     	ExternalChainingMapEntry<K, V>[] tmp = (ExternalChainingMapEntry<K, V>[]) new ExternalChainingMapEntry[length];
-    	for(int i=0;i<table.length;i++) {
-    		if(Objects.equals(table[i], null)) {
-    			continue;
-    		}else {
-    			boolean next =true;
-    			while(next) {
-    				int hash = Math.abs(table[i].getKey().hashCode());
-    				if(Objects.equals(tmp[hash], null)) {
-    						tmp[hash]=table[i];
-    				}else {
-    					
-    				}
-    			}
-    		}
+    	
+    	for(ExternalChainingMapEntry<K, V> curr: table) {
+    		while(curr!=null) {
+    			int hash = Math.abs(curr.getKey().hashCode()%tmp.length);
+    			//link
+    			ExternalChainingMapEntry<K, V> newEntry = new ExternalChainingMapEntry<>(curr.getKey(),curr.getValue());
+    			ExternalChainingMapEntry<K, V> head = tmp[hash];
+    			newEntry.setNext(head);
+    			tmp[hash]=newEntry;
+    			curr=curr.getNext();
+    		}	
     	}
+    	table=tmp;
     }
 
     /**

@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
+
 class Edge{
 	int to; //辺を結ぶ頂点
 	long w; //重み

@@ -8,6 +8,8 @@ public class Main {
 		
 		long ans=0;
 		
+		
+		
 		for(int i=0;i<n;i++) {
 			//入力
 			String t =sc.next();

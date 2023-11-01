@@ -32,5 +32,4 @@ public class B07 {
 			System.out.println(sum[i]);
 		}
 	}
-
 }

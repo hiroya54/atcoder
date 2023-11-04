@@ -4,10 +4,6 @@
 	<classpathentry kind="src" path="graph"/>
 	<classpathentry kind="src" path="Mathematics"/>
 	<classpathentry kind="src" path="ShortestPath"/>
-	<classpathentry kind="src" path="鉄則/A08"/>
-	<classpathentry kind="src" path="鉄則/A09"/>
-	<classpathentry kind="src" path="鉄則/A10"/>
-	<classpathentry kind="src" path="鉄則/A11"/>
 	<classpathentry kind="src" path="tessoku"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

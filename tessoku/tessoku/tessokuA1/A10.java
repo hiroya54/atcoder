@@ -1,4 +1,4 @@
-package git_atcoder;
+package tessoku.tessokuA1;
 
 import java.util.Scanner;
 
